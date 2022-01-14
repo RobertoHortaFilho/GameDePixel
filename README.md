@@ -1,1 +1,2 @@
 # GameDePixel
+jogo base finalizado
