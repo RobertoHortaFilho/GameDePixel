@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Primeiro jogo</title>
+    <title>ADM</title>
     <style>
+        #corpo{
+            display:flex;
+
+        }
         #screen{
             border: 10px solid gray;
             image-rendering: pixelated;
@@ -14,16 +18,54 @@
             width: 400px;
             height: 400px;
         }
+        .score{
+            width: 40%;
+        }
+        .score p{
+            margin-left: 40%;
+        }
+        .player{
+            width: 100%;
+            border: solid gray 1px;
+            margin: 10px;
+            font-size: 1em;
+            display:flex;
+            flex-wrap: wrap;
+            
+        }
+        .player-nick{
+            margin:6px;
+            margin-left: 6px;
+            width:70%;
+            height: 1.5em;
+            
+
+        }
+        .player-score{
+            margin:6px;
+            margin-left: 6px;
+            height: 1.5em;
+
+        }
     </style>
     <script src='/socket.io/socket.io.js'></script>
 </head>
 <body>
-    <canvas id='screen' width='10' height='10'></canvas>
+    <div id="corpo">
+        <canvas id='screen' width='10' height='10'></canvas>
+        <div class="score">
+            <p> Pontuação </p>
+            <div class="player">
+
+            </div>
+        </div>
+    </div>
 
     <script type='module'>
         import createKeyboardListener from './keyboard-listener.js'
         import createGame from './game.js'
         import renderScreen from './render-screen.js'
+        
 
         //instanciando o game e o keyboard
         const game = createGame()
@@ -51,15 +93,23 @@
             keyboardListener.subscribe((command) => {
                 socket.emit('move-player', command)
             })
-            
+
+            const screen = document.getElementById('screen')
+            screen.width = state.screen.width
+            screen.height = state.screen.height
+
+            // atualizar score
+            game.attScore()
         })
 
         socket.on('add-player',(command)=>{
             game.addPlayer(command)
+            game.attScore()
         })
 
         socket.on('remove-player', (command) =>{
             game.removePlayer(command)
+            game.attScore()
         })
 
         socket.on('move-player', (command) =>{
@@ -75,6 +125,14 @@
 
         socket.on('delete-fruit', (command) =>{
             game.removeFruit(command)
+            const playerId = socket.id
+            const player = game.state.players[playerId]
+            
+        })
+
+        socket.on('att-score',(command) => {
+            game.attScore()
+
         })
     </script>
 </body>

@@ -3,8 +3,8 @@ export default function createGame(){
         players:{},
         fruits:{},
         screen:{
-            width:10,
-            height:10,
+            width:20,
+            height:20,
         },
     }
 
@@ -35,10 +35,13 @@ export default function createGame(){
         const playerId = command.playerId
         const playerX = 'playerX' in command ? command.playerX : Math.floor(Math.random() * state.screen.width)
         const playerY = 'playerY' in command ? command.playerY : Math.floor(Math.random() * state.screen.height)
+        const score = 0
+        
 
         state.players[playerId] = {
             x: playerX,
             y: playerY,
+            score,
         }
 
         notifyAll({
@@ -48,6 +51,8 @@ export default function createGame(){
             playerY,
         })
     }
+
+
 
     function removePlayer(command){
         const playerId = command.playerId
@@ -137,11 +142,33 @@ export default function createGame(){
             const fruit = state.fruits[fruitId]
             if (player.x === fruit.x && player.y === fruit.y){
                 //esta colidindo
-                console.log(`${playerId} esta colidindo com ${fruitId}`)
+                //console.log(`${playerId} esta colidindo com ${fruitId}`)
+                addScore(playerId)
                 removeFruit({fruitId:fruitId}) 
             }
         }
         
+    }
+
+    function addScore(playerId){
+        const player = state.players[playerId]
+        player.score +=1
+        //console.log(state.players)
+        notifyAll({
+            type: 'att-score',
+            playerId
+        })
+    }
+
+    function attScore(){
+        const playersScore = document.querySelector('.player')
+        playersScore.innerHTML = `<div class="player-nick" style="font-weight: bold;"> Nick </div>
+          <div class="player-score" style="font-weight: bold;"> Score </div>`
+        for (const playerId in state.players){
+            const player = state.players[playerId]
+            const score = player.score
+            playersScore.innerHTML += `<div class="player-nick">${playerId}</div>  <div class="player-score">${score}</div>`
+        }
     }
 
     return {
@@ -154,6 +181,7 @@ export default function createGame(){
         setState,
         subscribe,
         start,
+        attScore,
     
     }
 }
