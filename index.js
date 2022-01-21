@@ -30,6 +30,10 @@ app.get('/', (req,res) => {
 
 app.get('/game', (req,res) =>{
     res.sendFile(path.resolve(__dirname,'public/game.html'))
+    res.sendFile(path.resolve(__dirname,'public/game.js'))
+    res.sendFile(path.resolve(__dirname,'public/keyboard-listener.js'))
+    res.sendFile(path.resolve(__dirname,'public/render-screen.js'))
+
 })
 
 app.get('/gameadm', (req,res) =>{
