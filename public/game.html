@@ -61,12 +61,13 @@
         </div>
     </div>
 
+    <a href="http://localhost:3000/img.png"> linkao</a>
+
     <script type='module'>
-        import path from 'path'
-        const __dirname = path.resolve()
-        import createKeyboardListener from ${path.resolve(__dirname,'keyboard-listener.js')}
-        import createGame from ${path.resolve(__dirname,'game.js')}
-        import renderScreen from ${path.resolve(__dirname,'render-screen.js')}
+
+        import createKeyboardListener from './keyboard-listener.js'
+        import createGame from './game.js'
+        import renderScreen from './render-screen.js'
         
 
         //instanciando o game e o keyboard
