@@ -4,7 +4,7 @@ import createGame from './public/game.js'
 import { Server } from 'socket.io'
 import path from 'path'
 const __dirname = path.resolve()
-
+const PORT = process.env.PORT || 5050;
 
 const app = express()
 const server = http.createServer(app)
@@ -83,6 +83,6 @@ sockets.on('connection', (socket)=>{
 
 
 
-server.listen(3000, ()=>{
-    console.log(`Server listening on port: 3000`)
+server.listen(PORT, ()=>{
+    console.log(`Server listening on port: ${PORT}`)
 })
