@@ -1,3 +1,4 @@
+console.log('dentro do game')
 export default function createGame(){
     const state = {
         players:{},
