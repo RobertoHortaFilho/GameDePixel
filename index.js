@@ -29,10 +29,7 @@ app.get('/', (req,res) => {
 })
 
 app.get('/game', (req,res) =>{
-    res.append(__dirname,'public/game.html')
     res.sendFile(path.resolve(__dirname,'public/game.html'))
-    
-
 })
 
 app.get('/gameadm', (req,res) =>{
@@ -86,6 +83,6 @@ sockets.on('connection', (socket)=>{
 
 
 
-server.listen(PORT, ()=>{
+server.listen(3000, ()=>{
     console.log(`Server listening on port: ${PORT}`)
 })
