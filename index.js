@@ -1,6 +1,6 @@
 import express from 'express'
 import http from 'http'
-import createGame from './public/game.js'
+import createGame from './publico/game.js'
 import { Server } from 'socket.io'
 import path from 'path'
 const __dirname = path.resolve()
@@ -10,7 +10,7 @@ const app = express()
 const server = http.createServer(app)
 const sockets = new Server(server)
 
-app.use(express.static('public'))
+app.use(express.static('publico'))
 
 const game = createGame()
 
@@ -25,15 +25,15 @@ game.subscribe((command)=>{
 // routes
 app.get('/', (req,res) => {
     console.log('req.query')
-    res.sendFile(path.resolve(__dirname,'public/login.html'))
+    res.sendFile(path.resolve(__dirname,'publico/login.html'))
 })
 
 app.get('/game', (req,res) =>{
-    res.sendFile(path.resolve(__dirname,'public/game.html'))
+    res.sendFile(path.resolve(__dirname,'publico/game.html'))
 })
 
 app.get('/gameadm', (req,res) =>{
-    res.sendFile(path.resolve(__dirname,'public/gameadm.html'))
+    res.sendFile(path.resolve(__dirname,'publico/gameadm.html'))
 
 })
 
