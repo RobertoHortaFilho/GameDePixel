@@ -62,9 +62,11 @@
     </div>
 
     <script type='module'>
-        import createKeyboardListener from 'http://localhost:3000/keyboard-listener.js'
-        import createGame from 'http://localhost:3000/game.js'
-        import renderScreen from 'http://localhost:3000/render-screen.js'
+        import path from 'path'
+        const __dirname = path.resolve()
+        import createKeyboardListener from `${path.resolve(__dirname,'keyboard-listener.js')}`
+        import createGame from `${path.resolve(__dirname,'game.js')}`
+        import renderScreen from `${path.resolve(__dirname,'render-screen.js')}`
         
 
         //instanciando o game e o keyboard
