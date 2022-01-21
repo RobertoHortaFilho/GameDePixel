@@ -29,10 +29,9 @@ app.get('/', (req,res) => {
 })
 
 app.get('/game', (req,res) =>{
+    res.append(__dirname,'public/game.html')
     res.sendFile(path.resolve(__dirname,'public/game.html'))
-    res.sendFile(path.resolve(__dirname,'public/game.js'))
-    res.sendFile(path.resolve(__dirname,'public/keyboard-listener.js'))
-    res.sendFile(path.resolve(__dirname,'public/render-screen.js'))
+    
 
 })
 
