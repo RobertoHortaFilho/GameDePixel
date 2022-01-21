@@ -5,22 +5,19 @@ import { Server } from 'socket.io'
 import path from 'path'
 const __dirname = path.resolve()
 
+
 const app = express()
 const server = http.createServer(app)
 const sockets = new Server(server)
 
 app.use(express.static('public'))
 
-
 const game = createGame()
-game.start()
-
 
 //adcionando o observer
 game.subscribe((command)=>{
     //console.log(command)
     sockets.emit(command.type,command)
-
 })
 
 
@@ -32,7 +29,6 @@ app.get('/', (req,res) => {
 })
 
 app.get('/game', (req,res) =>{
-    console.log(req.query)
     res.sendFile(path.resolve(__dirname,'public/game.html'))
 })
 
@@ -40,6 +36,8 @@ app.get('/gameadm', (req,res) =>{
     res.sendFile(path.resolve(__dirname,'public/gameadm.html'))
 
 })
+
+
 
 
 
@@ -63,10 +61,25 @@ sockets.on('connection', (socket)=>{
         command.type = 'move-player'
         game.movePlayer(command)
     })
+
+    socket.on('switch-game', ()=>{
+        if (game.gameStats()){
+            game.stop()
+           // console.log('pause')
+        }else{
+            game.start()
+           // console.log('start')
+        }  
+    })
+
+    socket.on('add-nick', nick =>{
+        const playerId = socket.id
+        const playerNick = nick ? nick : 'unknown'
+        game.addNick({playerId,playerNick})
+    })
+
+    
 })
-
-
-
 
 
 

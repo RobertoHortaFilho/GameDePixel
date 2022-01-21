@@ -47,6 +47,9 @@
             height: 1.5em;
 
         }
+        .adm{
+            margin-top:3em;
+        }
     </style>
     <script src='/socket.io/socket.io.js'></script>
 </head>
@@ -60,13 +63,17 @@
             </div>
         </div>
     </div>
+    <div class="adm">
+        <button class='buttons iniciar'> start </button>
+    </div>
 
     <script type='module'>
         import createKeyboardListener from './keyboard-listener.js'
         import createGame from './game.js'
         import renderScreen from './render-screen.js'
         
-
+        
+    
         //instanciando o game e o keyboard
         const game = createGame()
         const keyboardListener = createKeyboardListener(document)
@@ -74,8 +81,29 @@
         const screen = document.getElementById('screen')
         //rederizar a tela
         renderScreen(game,screen)
-        const socket = io()
+        const socket = io({transports: ['websocket'], upgrade:false })
 
+
+        
+        //adm
+        const iniciar = document.querySelector('.iniciar')
+        iniciar.addEventListener('click',()=>{
+            socket.emit('switch-game')
+            console.log('cliquei')  
+        })
+        socket.on('switch-game',(command) => {
+            const gameStatus = command.status
+            const botao = document.querySelector('.iniciar')
+            if (gameStatus){
+                botao.innerHTML = 'stop'
+            }else{
+                botao.innerHTML = 'start'
+            }
+        })
+        
+        
+        
+        
         socket.on('connect', ()=>{
             const playerId = socket.id
             console.log(`player connect on client with id: ${playerId}`)
@@ -83,6 +111,11 @@
             const screen = document.getElementById('screen')
             //rederizar a tela
             renderScreen(game,screen,playerId)
+        })
+
+        socket.on('disconnect',() => {
+            keyboardListener.unsubscribeAll()
+            console.log('unsubscribe')
         })
 
         socket.on('setup', (state)=>{
@@ -104,6 +137,15 @@
 
         socket.on('add-player',(command)=>{
             game.addPlayer(command)
+            game.attScore()
+            //nick
+            const urlString = window.location.href
+            const url = new URL(urlString)
+            const playerNick = url.searchParams.get('nome')
+            socket.emit('add-nick',playerNick)
+        })
+        socket.on('att-nick', command =>{
+            game.addNick(command)
             game.attScore()
         })
 
@@ -134,6 +176,8 @@
             game.attScore()
 
         })
+
+        
     </script>
 </body>
 </html>

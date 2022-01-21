@@ -8,12 +8,35 @@ export default function createGame(){
         },
     }
 
+    var inGame = {
+        _destroyed: true,
+    }
+
+
     const observers = []
 
     function start(){
         const frequency = 2000 
 
-        setInterval(addFruit, frequency)
+        inGame = setInterval(addFruit, frequency)
+        console.log(inGame)
+        const command = {
+            type : 'switch-game',
+            status : true,
+        }
+        notifyAll(command)
+    }
+    function stop(){
+        clearInterval(inGame)
+        console.log(inGame)
+        const command = {
+            type : 'switch-game',
+            status : false,
+        }
+        notifyAll(command)
+    }
+    function gameStats(){
+        return !inGame._destroyed
     }
 
     function subscribe(observerFunction){
@@ -36,12 +59,16 @@ export default function createGame(){
         const playerX = 'playerX' in command ? command.playerX : Math.floor(Math.random() * state.screen.width)
         const playerY = 'playerY' in command ? command.playerY : Math.floor(Math.random() * state.screen.height)
         const score = 0
+        const nick = command.nick
+        
         
 
         state.players[playerId] = {
             x: playerX,
             y: playerY,
             score,
+            nick,
+           
         }
 
         notifyAll({
@@ -167,8 +194,21 @@ export default function createGame(){
         for (const playerId in state.players){
             const player = state.players[playerId]
             const score = player.score
-            playersScore.innerHTML += `<div class="player-nick">${playerId}</div>  <div class="player-score">${score}</div>`
+            const nick = player.nick
+            playersScore.innerHTML += `<div class="player-nick">${nick}</div>  <div class="player-score">${score}</div>`
         }
+    }
+
+    function addNick(command){
+        const playerId = command.playerId
+        const playerNick = command.playerNick
+        const player = state.players[playerId]
+        player.nick = playerNick
+
+        command.type = 'att-nick'
+
+        notifyAll(command)
+
     }
 
     return {
@@ -181,7 +221,10 @@ export default function createGame(){
         setState,
         subscribe,
         start,
+        stop,
         attScore,
+        gameStats,
+        addNick,
     
     }
 }
