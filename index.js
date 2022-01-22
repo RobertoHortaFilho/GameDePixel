@@ -27,19 +27,27 @@ app.get('/', (req,res) => {
     console.log('req.query')
     res.sendFile(path.resolve(__dirname,'publico/login.html'))
 })
-
 app.get('/game', (req,res) =>{
     res.sendFile(path.resolve(__dirname,'publico/game.html'))
 })
-
 app.get('/gameadm', (req,res) =>{
     res.sendFile(path.resolve(__dirname,'publico/gameadm.html'))
-
 })
 
 
+// routes scripts
+app.get('/game.js', (req,res) =>{
+    res.sendFile(path.resolve(__dirname,'publico/game.js'))
 
+})
+app.get('/keyboard-listener.js', (req,res) =>{
+    res.sendFile(path.resolve(__dirname,'publico/keyboard-listener.js'))
 
+})
+app.get('/render-screen.js', (req,res) =>{
+    res.sendFile(path.resolve(__dirname,'publico/render-screen.js'))
+
+})
 
 
 
