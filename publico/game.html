@@ -61,6 +61,8 @@
         </div>
     </div>
 
+    <audio src="./sounds/coin.wav" id="coin"></audio>
+    <audio src="./sounds/oneup.wav" id="oneup"></audio>
     
 
     <script type='module'>
@@ -78,6 +80,12 @@
         //rederizar a tela
         renderScreen(game,screen)
         const socket = io({transports: ['websocket'], upgrade:false })
+
+
+        const coin = document.querySelector('#coin')
+        const oneup = document.querySelector('#oneup')
+        coin.volume = .3
+        oneup.volume = .3
 
         socket.on('connect', ()=>{
             const playerId = socket.id
@@ -142,8 +150,6 @@
 
         socket.on('delete-fruit', (command) =>{
             game.removeFruit(command)
-            const playerId = socket.id
-            const player = game.state.players[playerId]
             
         })
 
@@ -152,6 +158,16 @@
 
         })
 
+        socket.on('play-audio', command =>{
+            if (command.playerId == socket.id){
+                coin.play()
+                
+            }
+        })
+
+        socket.on('one-up', command =>{
+            oneup.play()
+        })
         
     </script>
 </body>

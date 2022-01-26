@@ -7,18 +7,16 @@ export default function createGame(){
             width:20,
             height:20,
         },
+        special: 0
     }
-
     var inGame = {
         _destroyed: true,
     }
-
-
     const observers = []
 
-    function start(){
-        const frequency = 2000 
+    setInterval(specialTimer,50)
 
+    function start(frequency){
         inGame = setInterval(addFruit, frequency)
         console.log(inGame)
         const command = {
@@ -27,6 +25,7 @@ export default function createGame(){
         }
         notifyAll(command)
     }
+
     function stop(){
         clearInterval(inGame)
         console.log(inGame)
@@ -36,6 +35,19 @@ export default function createGame(){
         }
         notifyAll(command)
     }
+
+    function special(){
+        state.special += 30
+    }
+
+    function specialTimer(){
+        if (state.special > 0){
+            addFruit()
+            addFruit()
+            state.special -= 2;
+        }
+    }
+
     function gameStats(){
         return !inGame._destroyed
     }
@@ -172,7 +184,12 @@ export default function createGame(){
                 //esta colidindo
                 //console.log(`${playerId} esta colidindo com ${fruitId}`)
                 addScore(playerId)
-                removeFruit({fruitId:fruitId}) 
+                removeFruit({fruitId:fruitId})
+                const command = {
+                    type : 'play-audio',
+                    playerId}
+
+                notifyAll(command)
             }
         }
         
@@ -186,6 +203,13 @@ export default function createGame(){
             type: 'att-score',
             playerId
         })
+
+        if (player.score % 100 == 0){
+            notifyAll({
+                type : 'one-up',
+                playerId
+            })
+        }
     }
 
     function attScore(){
@@ -226,6 +250,7 @@ export default function createGame(){
         attScore,
         gameStats,
         addNick,
+        special,
     
     }
 }

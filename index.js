@@ -10,7 +10,7 @@ const app = express()
 const server = http.createServer(app)
 const sockets = new Server(server)
 
-app.use(express.static('publico'))
+//app.use(express.static('publico'))
 
 const game = createGame()
 
@@ -38,15 +38,18 @@ app.get('/gameadm', (req,res) =>{
 // routes scripts
 app.get('/game.js', (req,res) =>{
     res.sendFile(path.resolve(__dirname,'publico/game.js'))
-
 })
 app.get('/keyboard-listener.js', (req,res) =>{
     res.sendFile(path.resolve(__dirname,'publico/keyboard-listener.js'))
-
 })
 app.get('/render-screen.js', (req,res) =>{
     res.sendFile(path.resolve(__dirname,'publico/render-screen.js'))
-
+})
+app.get('/sounds/coin.wav', (req,res) =>{
+    res.sendFile(path.resolve(__dirname,'publico/sounds/coin.wav'))
+})
+app.get('/sounds/oneup.wav', (req,res) =>{
+    res.sendFile(path.resolve(__dirname,'publico/sounds/oneup.wav'))
 })
 
 
@@ -70,12 +73,12 @@ sockets.on('connection', (socket)=>{
         game.movePlayer(command)
     })
 
-    socket.on('switch-game', ()=>{
+    socket.on('switch-game', (frequency)=>{
         if (game.gameStats()){
             game.stop()
            // console.log('pause')
         }else{
-            game.start()
+            game.start(frequency)
            // console.log('start')
         }  
     })
@@ -84,6 +87,10 @@ sockets.on('connection', (socket)=>{
         const playerId = socket.id
         const playerNick = nick ? nick : 'unknown'
         game.addNick({playerId,playerNick})
+    })
+
+    socket.on('special', () =>{
+        game.special()
     })
 
     

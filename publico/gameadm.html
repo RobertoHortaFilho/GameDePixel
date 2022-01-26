@@ -65,7 +65,12 @@
     </div>
     <div class="adm">
         <button class='buttons iniciar'> start </button>
+        |     frequencia  ms| <input type="text" name="sec" id="frequencia" value="2000">
+        <button class="buttons special"> special </button>
     </div>
+    
+    <audio src="./sounds/coin.wav" id="coin"></audio>
+    <audio src="./sounds/oneup.wav" id="oneup"></audio>
 
     <script type='module'>
         import createKeyboardListener from './keyboard-listener.js'
@@ -88,8 +93,9 @@
         //adm
         const iniciar = document.querySelector('.iniciar')
         iniciar.addEventListener('click',()=>{
-            socket.emit('switch-game')
-            console.log('cliquei')  
+            const frequencia = document.querySelector('#frequencia')
+            const valor = frequencia.value
+            socket.emit('switch-game',valor)
         })
         socket.on('switch-game',(command) => {
             const gameStatus = command.status
@@ -100,10 +106,19 @@
                 botao.innerHTML = 'start'
             }
         })
+        const special = document.querySelector('.special')
+        special.addEventListener('click', ()=>{
+            socket.emit('special')
+        })
         
         
         
         
+        const coin = document.querySelector('#coin')
+        const oneup = document.querySelector('#oneup')
+        coin.volume = .3
+        oneup.volume = .3
+
         socket.on('connect', ()=>{
             const playerId = socket.id
             console.log(`player connect on client with id: ${playerId}`)
@@ -167,14 +182,23 @@
 
         socket.on('delete-fruit', (command) =>{
             game.removeFruit(command)
-            const playerId = socket.id
-            const player = game.state.players[playerId]
             
         })
 
         socket.on('att-score',(command) => {
             game.attScore()
 
+        })
+
+        socket.on('play-audio', command =>{
+            if (command.playerId == socket.id){
+                coin.play()
+                
+            }
+        })
+
+        socket.on('one-up', command =>{
+            oneup.play()
         })
 
         
