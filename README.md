@@ -1,3 +1,6 @@
+## projeto feito em html js puro.
+jogo de pixel baseado no canal felipe dechamps
+
 # GameDePixel
 jogo base finalizado
 
